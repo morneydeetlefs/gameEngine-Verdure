@@ -380,6 +380,16 @@
       font-size: 0.68rem;
       color: var(--dim);
     }
+
+    .file-tree pre {
+    white-space: pre;
+    font-family: var(--font-mono);
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    line-height: 1.8;
+}
   </style>
 </head>
 <body>
@@ -532,6 +542,7 @@
     <p>The editor expects and maintains this folder structure. When you export or save, files are written to these exact locations.</p>
 
     <div class="file-tree">
+    <pre>  
 <span class="ft-dir">verdure/</span>
 ├── <span class="ft-dir">editor/</span>
 │   ├── <span class="ft-key">index.html</span>        <span class="ft-note">← World Editor (open this with Live Server)</span>
@@ -568,6 +579,7 @@
 ├── <span class="ft-file">manifest.json</span>         <span class="ft-note">← PWA manifest (installable on mobile + desktop)</span>
 ├── <span class="ft-file">sw.js</span>                 <span class="ft-note">← Service Worker (offline caching)</span>
 └── <span class="ft-file">EDITOR_HELP.html</span>      <span class="ft-note">← this file</span>
+    </pre>
     </div>
 
     <div class="callout info">
