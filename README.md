@@ -41,5 +41,6 @@ Design scenes, entities, dialogs, and HUDs – then export a complete, deployabl
 
 ### Clone & run
 ```bash
-git clone https://github.com/your-username/verdure-world-editor.git
-cd verdure-world-editor
+git clone https://github.com/your-username/gameEngine-Verdure.git
+cd gameEngine-Verdure
+
