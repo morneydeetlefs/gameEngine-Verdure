@@ -1,9 +1,10 @@
-# Verdure World Editor
+# 🍃 Verdure World Editor
 
 **A browser‑based, game‑agnostic authoring tool for point‑and‑click adventure games.**  
-Design scenes, entities, dialogs, and HUDs – then export a complete, deployable HTML5 game (PWA + offline support).
+Design scenes, entities, dialog trees, and HUDs – then export a complete, deployable HTML5 game (PWA + offline support).
 
-![Editor screenshot](docs/screenshot.png)   <!-- add a real screenshot later -->
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Project-2ea44f?style=for-the-badge&logo=github)](https://morneydeetlefs.github.io/gameEngine-Verdure/)
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 ---
 
@@ -33,14 +34,14 @@ Design scenes, entities, dialogs, and HUDs – then export a complete, deployabl
 
 ---
 
-## 🚀 Getting Started (for developers / game designers)
+## 🚀 Getting Started
 
 ### Prerequisites
 - **VS Code** with **Live Server** extension (or any local static server)
 - **Chrome** or **Edge** (required for File System Access API – Firefox can only preview)
 
 ### Clone & run
-```bash
-git clone https://github.com/your-username/gameEngine-Verdure.git
-cd gameEngine-Verdure
 
+```bash
+git clone https://github.com/morneydeetlefs/gameEngine-Verdure.git
+cd gameEngine-Verdure
