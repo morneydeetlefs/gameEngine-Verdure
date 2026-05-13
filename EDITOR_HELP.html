@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdure — World Editor Help v1.0</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+    :root {
+      --soil:      #2a1f14;
+      --bark:      #3d2b1a;
+      --moss:      #4a5e3a;
+      --leaf:      #6b8f4e;
+      --sprout:    #9bbf73;
+      --bloom:     #c8e6a0;
+      --petal:     #f0f7e6;
+      --rust:      #b05c2a;
+      --amber:     #d4892a;
+      --bg:        #f7f4ee;
+      --sidebar:   #2a1f14;
+      --panel:     #ffffff;
+      --border:    #ddd8cc;
+      --text:      #2a2018;
+      --dim:       #6a6458;
+      --code-bg:   #f0ede6;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 270px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      padding: 0 0 40px;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: #4a3828; }
+
+    .sidebar-logo {
+      padding: 24px 24px 18px;
+      border-bottom: 1px solid #3d2b1a;
+    }
+    .sidebar-logo h1 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--sprout);
+    }
+    .sidebar-logo p {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: #6a6050;
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .nav-section {
+      padding: 18px 0 4px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #5a5040;
+    }
+    .nav-link {
+      display: block;
+      padding: 5px 24px;
+      font-size: 0.81rem;
+      color: #a09080;
+      text-decoration: none;
+      transition: all .15s;
+      border-left: 2px solid transparent;
+    }
+    .nav-link:hover { color: var(--bloom); background: rgba(255,255,255,.04); }
+    .nav-link.sub {
+      padding-left: 36px;
+      font-size: 0.75rem;
+      color: #7a7060;
+    }
+    .nav-link.sub:hover { color: var(--sprout); }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: 270px;
+      flex: 1;
+      max-width: 880px;
+      padding: 48px 56px 80px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      margin-bottom: 48px;
+      padding-bottom: 36px;
+      border-bottom: 2px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--leaf);
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      line-height: 1.15;
+      color: var(--soil);
+      margin-bottom: 14px;
+    }
+    .hero h1 em { color: var(--leaf); font-style: italic; }
+    .hero p { font-size: 1rem; color: var(--dim); max-width: 580px; line-height: 1.75; }
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--soil);
+      color: var(--sprout);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 18px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── SECTIONS ── */
+    .section { margin-bottom: 56px; scroll-margin-top: 32px; }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      color: var(--soil);
+      margin-bottom: 6px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    h2 .section-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--leaf);
+      display: block;
+      margin-bottom: 4px;
+      letter-spacing: 0.1em;
+    }
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--soil);
+      margin: 26px 0 9px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h3::before {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 15px;
+      background: var(--leaf);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--moss);
+      margin: 16px 0 5px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    p { margin-bottom: 11px; }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol { padding-left: 22px; margin-bottom: 13px; }
+    li { margin-bottom: 4px; }
+    strong { color: var(--soil); font-weight: 600; }
+    em { color: var(--moss); }
+    a { color: var(--leaf); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.81em;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--rust);
+    }
+    pre {
+      background: var(--soil);
+      border-radius: 6px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 12px 0 16px;
+      border-left: 3px solid var(--leaf);
+    }
+    pre code {
+      font-size: 0.78rem;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--bloom);
+      line-height: 1.75;
+    }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 14px 0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.88rem;
+    }
+    .callout-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .callout.tip  { background: #f0f7e6; border: 1px solid #c8e6a0; }
+    .callout.note { background: #f0f4ff; border: 1px solid #c0ccee; }
+    .callout.warn { background: #fff8ee; border: 1px solid #f0d090; }
+    .callout.info { background: #f5f0ea; border: 1px solid var(--border); }
+    .callout.new  { background: #eef7f0; border: 1px solid #9bbf73; }
+
+    /* ── TABLES ── */
+    .table-wrap { overflow-x: auto; margin: 12px 0 18px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead th {
+      background: var(--soil);
+      color: var(--bloom);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 9px 13px;
+      text-align: left;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7f3ec; }
+    td { padding: 8px 13px; vertical-align: top; }
+    td:first-child { font-weight: 500; color: var(--soil); white-space: nowrap; }
+    td code { font-size: 0.75rem; }
+
+    /* ── STEPS ── */
+    .steps { counter-reset: step; list-style: none; padding: 0; margin: 14px 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .steps li:last-child { border-bottom: none; margin-bottom: 0; }
+    .steps li::before {
+      content: counter(step);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      background: var(--leaf);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .steps li div { flex: 1; }
+    .steps li strong { display: block; margin-bottom: 2px; font-size: 0.9rem; }
+
+    /* ── CARDS ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .card-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .card-title { font-weight: 600; font-size: 0.86rem; color: var(--soil); margin-bottom: 3px; }
+    .card-desc { font-size: 0.75rem; color: var(--dim); line-height: 1.5; }
+
+    /* ── SCHEMA BLOCK ── */
+    .schema-block {
+      background: var(--soil);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin: 12px 0;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      line-height: 1.85;
+      color: #c2c9b8;
+      border-left: 3px solid var(--amber);
+    }
+    .schema-block .sk { color: var(--amber); }
+    .schema-block .sv { color: var(--sprout); }
+    .schema-block .sc { color: #5a5040; font-style: italic; }
+
+    /* ── LAYOUT DIAGRAM ── */
+    .layout-diagram {
+      background: var(--soil);
+      border-radius: 6px;
+      padding: 20px;
+      margin: 14px 0;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: #c2c9b8;
+      border-left: 3px solid var(--sprout);
+    }
+    .layout-diagram .ld-header { color: var(--amber); }
+    .layout-diagram .ld-panel  { color: var(--sprout); }
+    .layout-diagram .ld-label  { color: var(--bloom); }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: var(--soil);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin: 12px 0 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.8;
+      color: var(--bloom);
+      border-left: 3px solid var(--amber);
+    }
+    .file-tree .ft-dir   { color: var(--amber); }
+    .file-tree .ft-file  { color: var(--sprout); }
+    .file-tree .ft-note  { color: #5a6050; font-style: italic; }
+    .file-tree .ft-key   { color: var(--bloom); }
+
+    /* ── TOOL ROW ── */
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .tool-chip {
+      background: var(--soil);
+      color: var(--sprout);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid #3d5030;
+    }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+    .footer {
+      text-align: center;
+      padding: 20px 0 40px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--dim);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Verdure</h1>
+    <p>WORLD EDITOR · HELP v1.0</p>
+  </div>
+
+  <div class="nav-section">Getting Started</div>
+  <a class="nav-link" href="#overview">01 · Overview</a>
+  <a class="nav-link" href="#requirements">02 · Requirements</a>
+  <a class="nav-link sub" href="#requirements">VS Code & Live Server</a>
+  <a class="nav-link sub" href="#filesystem-api">File System Access</a>
+  <a class="nav-link" href="#structure">03 · Project Structure</a>
+  <a class="nav-link" href="#interface">04 · Interface Layout</a>
+
+  <div class="nav-section">Editor Tabs</div>
+  <a class="nav-link" href="#tab-assets">05 · Assets Tab</a>
+  <a class="nav-link sub" href="#images">Image Library</a>
+  <a class="nav-link sub" href="#audio">Audio Library</a>
+  <a class="nav-link" href="#tab-game">06 · Game Tab</a>
+  <a class="nav-link sub" href="#game-metadata">Metadata</a>
+  <a class="nav-link sub" href="#hud-builder">HUD Builder</a>
+  <a class="nav-link sub" href="#ads-config">Ads Config</a>
+  <a class="nav-link" href="#tab-entities">07 · Entities Tab</a>
+  <a class="nav-link sub" href="#entity-basics">Basics</a>
+  <a class="nav-link sub" href="#entity-states">States</a>
+  <a class="nav-link sub" href="#entity-interactions">Interactions</a>
+  <a class="nav-link sub" href="#entity-timers">Timers</a>
+  <a class="nav-link" href="#tab-scenes">08 · Scenes Tab</a>
+  <a class="nav-link sub" href="#canvas-tools">Canvas Tools</a>
+  <a class="nav-link sub" href="#placing-instances">Placing Instances</a>
+  <a class="nav-link sub" href="#masks-hotspots">Masks & Hotspots</a>
+  <a class="nav-link sub" href="#scene-preview">Preview</a>
+  <a class="nav-link" href="#tab-dialogs">09 · Dialogs Tab</a>
+  <a class="nav-link sub" href="#node-types">Node Types</a>
+  <a class="nav-link sub" href="#branching">Branching & Choices</a>
+
+  <div class="nav-section">Deployment</div>
+  <a class="nav-link" href="#save-export">10 · Save & Export</a>
+  <a class="nav-link" href="#hosting">11 · Hosting & PWA</a>
+  <a class="nav-link" href="#ads-deploy">12 · Ads in Production</a>
+  <a class="nav-link" href="#workflow">13 · Recommended Workflow</a>
+
+  <div class="nav-section">Reference</div>
+  <a class="nav-link" href="#ref-effects">14 · Effects Reference</a>
+  <a class="nav-link" href="#ref-conditions">15 · Conditions Reference</a>
+  <a class="nav-link" href="#ref-animations">16 · Animations Reference</a>
+  <a class="nav-link" href="#ref-categories">17 · Entity Categories</a>
+  <a class="nav-link" href="#ref-hud">18 · HUD Element Types</a>
+  <a class="nav-link" href="#ref-nodes">19 · Dialog Node Types</a>
+</nav>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<main class="main">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Documentation</div>
+    <h1>Verdure<br><em>World Editor</em></h1>
+    <p>A browser-based tool for building point-and-click game worlds. Design maps, entities, dialog trees, mini-games, and HUD layouts — then export a complete, deployable game package.</p>
+    <div class="version-badge">🌱 Version 1.0 · Editor Help · Game-Agnostic Engine</div>
+  </div>
+
+  <!-- ══ 01 OVERVIEW ══ -->
+  <section class="section" id="overview">
+    <h2><span class="section-num">01</span>Overview</h2>
+    <p>The Verdure World Editor is a game-agnostic point-and-click adventure game authoring tool. It produces a folder of JSON files and assets that the Verdure Game Engine reads to run any game you design — from guerrilla gardening to mystery adventures to puzzle games.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🛠</div>
+        <div class="card-title">editor/index.html</div>
+        <div class="card-desc">The World Editor. Runs locally via VS Code Live Server. Reads and writes your project folder directly via the File System Access API.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎮</div>
+        <div class="card-title">game/index.html</div>
+        <div class="card-desc">The Game Engine. Hosted on the web. Loads your JSON files, renders scenes, handles interactions, dialogs, inventory, timers, and ads.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <div class="card-title">data/</div>
+        <div class="card-desc">Your game content. game.json, entities.json, scenes/, dialogs/ — all authored in the editor, read by the engine.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🖼</div>
+        <div class="card-title">assets/</div>
+        <div class="card-desc">Sprites, backgrounds, and audio files. Uploaded via the Assets tab. Referenced by relative path in all JSON files.</div>
+      </div>
+    </div>
+
+    <div class="callout new">
+      <div class="callout-icon">✨</div>
+      <div><strong>What's new in v1.0:</strong> The engine is now fully game-agnostic — no Verdure-specific logic is hardcoded. HUD elements, player stats, entity categories, and interaction systems are all configured through JSON. Any point-and-click game can be built on this engine.</div>
+    </div>
+  </section>
+
+  <!-- ══ 02 REQUIREMENTS ══ -->
+  <section class="section" id="requirements">
+    <h2><span class="section-num">02</span>Requirements & Setup</h2>
+
+    <h3>What You Need</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>Purpose</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>VS Code</td><td>Code editor + project host</td><td>Free. Any version.</td></tr>
+          <tr><td>Live Server extension</td><td>Serve the editor on localhost</td><td>Search "Live Server" by Ritwick Dey in VS Code extensions.</td></tr>
+          <tr><td>Chrome or Edge</td><td>Run the editor</td><td>Required for File System Access API. Firefox not supported for file writes.</td></tr>
+          <tr><td>Web hosting</td><td>Host the deployed game</td><td>GitHub Pages, Netlify, Vercel — any static host with HTTPS.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="filesystem-api">File System Access API</h3>
+    <p>The editor uses the browser's <strong>File System Access API</strong> to read and write files directly in your project folder. This means saves go straight to disk — no downloading and re-importing JSON files. When you click <strong>Save</strong>, your <code>entities.json</code> updates on disk immediately and Live Server reloads the game automatically.</p>
+
+    <ol class="steps">
+      <li>
+        <div><strong>Open your project in VS Code.</strong> File → Open Folder → select your <code>verdure/</code> project root.</div>
+      </li>
+      <li>
+        <div><strong>Start Live Server.</strong> Right-click <code>editor/index.html</code> in the VS Code file explorer → <em>Open with Live Server</em>. Chrome opens automatically.</div>
+      </li>
+      <li>
+        <div><strong>Open your project folder.</strong> The editor shows an <em>Open Project Folder</em> prompt on first launch. Click it, navigate to your <code>verdure/</code> folder, and click <em>Select Folder</em>. Chrome asks for permission — click <em>Allow</em>.</div>
+      </li>
+      <li>
+        <div><strong>Start editing.</strong> The editor reads all existing JSON files from the folder. Any saves write back to disk instantly. The folder handle is remembered for the session.</div>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠</div>
+      <div><strong>Chrome only for editing.</strong> The File System Access API is supported in Chrome 86+ and Edge 86+. Firefox does not support file writes. You can view the editor in Firefox but saving will fall back to download-only mode.</div>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div><strong>Re-opening the editor.</strong> Chrome remembers the folder permission for the session. If you close and reopen the browser tab, click <em>Reconnect Project Folder</em> and select the same folder — permission is granted instantly without a new dialog.</div>
+    </div>
+  </section>
+
+  <!-- ══ 03 PROJECT STRUCTURE ══ -->
+  <section class="section" id="structure">
+    <h2><span class="section-num">03</span>Project Structure</h2>
+    <p>The editor expects and maintains this folder structure. When you export or save, files are written to these exact locations.</p>
+
+    <div class="file-tree">
+<span class="ft-dir">verdure/</span>
+├── <span class="ft-dir">editor/</span>
+│   ├── <span class="ft-key">index.html</span>        <span class="ft-note">← World Editor (open this with Live Server)</span>
+│   ├── <span class="ft-dir">css/</span>              <span class="ft-note">← editor styles</span>
+│   └── <span class="ft-dir">js/</span>               <span class="ft-note">← editor logic, one file per tab</span>
+│
+├── <span class="ft-dir">game/</span>
+│   ├── <span class="ft-key">index.html</span>        <span class="ft-note">← Game Engine (deploy this to your web host)</span>
+│   ├── <span class="ft-dir">css/</span>
+│   └── <span class="ft-dir">js/</span>
+│
+├── <span class="ft-dir">shared/</span>
+│   ├── <span class="ft-file">renderer.js</span>       <span class="ft-note">← scene rendering (used by editor preview + game)</span>
+│   └── <span class="ft-file">animations.js</span>     <span class="ft-note">← glow, float, grow, pulse, sparkle</span>
+│
+├── <span class="ft-dir">data/</span>
+│   ├── <span class="ft-file">game.json</span>         <span class="ft-note">← HUD config, player setup, ads, audio mapping</span>
+│   ├── <span class="ft-file">entities.json</span>     <span class="ft-note">← all entity templates</span>
+│   ├── <span class="ft-dir">scenes/</span>
+│   │   ├── <span class="ft-file">scene_lot.json</span>
+│   │   └── <span class="ft-file">scene_shed.json</span>
+│   └── <span class="ft-dir">dialogs/</span>
+│       └── <span class="ft-file">botanist_intro.json</span>
+│
+├── <span class="ft-dir">assets/</span>
+│   ├── <span class="ft-dir">sprites/</span>          <span class="ft-note">← entity and NPC sprites (PNG)</span>
+│   ├── <span class="ft-dir">backgrounds/</span>      <span class="ft-note">← scene background images (JPG/PNG)</span>
+│   ├── <span class="ft-dir">audio/</span>            <span class="ft-note">← ambient loops and SFX (MP3/OGG)</span>
+│   └── <span class="ft-dir">icons/</span>            <span class="ft-note">← PWA icons (192×192, 512×512 PNG)</span>
+│
+├── <span class="ft-dir">minigames/</span>
+│   └── <span class="ft-file">puzzle_box.html</span>  <span class="ft-note">← self-contained mini-game HTML files</span>
+│
+├── <span class="ft-file">manifest.json</span>         <span class="ft-note">← PWA manifest (installable on mobile + desktop)</span>
+├── <span class="ft-file">sw.js</span>                 <span class="ft-note">← Service Worker (offline caching)</span>
+└── <span class="ft-file">EDITOR_HELP.html</span>      <span class="ft-note">← this file</span>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">📁</div>
+      <div><strong>Asset files, not base64.</strong> Unlike the previous version, assets are stored as real files in <code>assets/</code>. JSON files reference them by relative path (e.g. <code>"sprite": "assets/sprites/wildflower_bloom.png"</code>). The editor converts uploaded files internally but writes real files to disk on save. This keeps JSON files small and assets replaceable.</div>
+    </div>
+  </section>
+
+  <!-- ══ 04 INTERFACE ══ -->
+  <section class="section" id="interface">
+    <h2><span class="section-num">04</span>Interface Layout</h2>
+    <p>The editor has a persistent three-panel layout. All tabs share the same structure — only the contents change.</p>
+
+    <div class="layout-diagram">
+<span class="ld-header">┌──────────────────────────────────────────────────────────────┐</span>
+<span class="ld-header">│  HEADER  Logo · Assets · Game · Entities · Scenes · Dialogs  │</span>
+<span class="ld-header">│          ·· Open Folder · Save · Export Zip ··               │</span>
+<span class="ld-header">├────────────────┬──────────────────────────┬───────────────────┤</span>
+<span class="ld-panel">│  LEFT PANEL    │                          │  RIGHT PANEL      │</span>
+<span class="ld-panel">│                │    CENTRE                │                   │</span>
+<span class="ld-label">│  List of items │    Main editing area     │  Properties for   │</span>
+<span class="ld-label">│  + Search      │    (canvas / form /      │  selected item    │</span>
+<span class="ld-label">│  + New button  │     node graph)          │                   │</span>
+<span class="ld-panel">│                │                          │                   │</span>
+<span class="ld-header">└────────────────┴──────────────────────────┴───────────────────┘</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tab</th><th>Left Panel</th><th>Centre</th><th>Right Panel</th></tr></thead>
+        <tbody>
+          <tr><td>Assets</td><td>Images / Audio toggle</td><td>Thumbnail grid</td><td>Asset details, usage</td></tr>
+          <tr><td>Game</td><td>Config sections</td><td>Scrollable form</td><td>HUD live preview</td></tr>
+          <tr><td>Entities</td><td>Entity list + category filter</td><td>Entity property form</td><td>Sprite preview + animation</td></tr>
+          <tr><td>Scenes</td><td>Scene list</td><td>Visual canvas editor</td><td>Selected item properties</td></tr>
+          <tr><td>Dialogs</td><td>Dialog list</td><td>Node graph canvas</td><td>Selected node properties</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Header Controls</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Open Folder</td><td>Connect to your project folder via File System Access API. Required on first launch each session.</td></tr>
+          <tr><td>Save <kbd>Ctrl+S</kbd></td><td>Write all modified JSON files to the project folder immediately. Live Server reloads the game.</td></tr>
+          <tr><td>Export Zip</td><td>Package the entire project (all JSON + assets) as a downloadable zip, ready to deploy.</td></tr>
+          <tr><td>Undo <kbd>Ctrl+Z</kbd></td><td>Step back through edit history within the current session.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">💾</div>
+      <div><strong>Save often.</strong> The editor auto-saves working state to browser localStorage every 30 seconds as a backup, but <kbd>Ctrl+S</kbd> is what writes to disk and triggers Live Server reload. Make it a habit.</div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ══ 05 ASSETS TAB ══ -->
+  <section class="section" id="tab-assets">
+    <h2><span class="section-num">05</span>Assets Tab</h2>
+    <p>The Assets tab is your central media library. Every sprite, background, portrait, and audio file used anywhere in the game is uploaded here first. Everything else in the editor references assets by their ID — you never type a file path manually.</p>
+
+    <h3 id="images">Image Library</h3>
+    <p>Click the <strong>Images</strong> toggle in the left panel to see the image library.</p>
+    <ol class="steps">
+      <li><div><strong>Upload.</strong> Drag image files onto the upload zone, or click <em>Browse</em>. Accepts PNG, JPG, WebP, GIF. Multiple files can be dropped at once.</div></li>
+      <li><div><strong>Label and tag.</strong> Each upload prompts for a display label and optional tags (e.g. <code>plant</code>, <code>background</code>, <code>portrait</code>, <code>npc</code>). Tags power the pickers elsewhere in the editor.</div></li>
+      <li><div><strong>Confirm.</strong> The file is written to <code>assets/sprites/</code> (or <code>assets/backgrounds/</code> if tagged <code>background</code>) and its path is stored in the image registry.</div></li>
+    </ol>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Action</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>Re-label or re-tag</td><td>Click the pencil icon on any thumbnail</td></tr>
+          <tr><td>Replace image</td><td>Click the thumbnail → <em>Replace File</em>. All references update automatically.</td></tr>
+          <tr><td>See where used</td><td>Click <em>Used in</em> badge on a thumbnail. Lists every entity and scene referencing this asset.</td></tr>
+          <tr><td>Delete</td><td>Only possible if <em>Used in</em> is empty. The editor prevents deleting referenced assets.</td></tr>
+          <tr><td>Search</td><td>Filter by label text or tag chip in the left panel.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">🎨</div>
+      <div><strong>Recommended image sizes:</strong> Backgrounds — 1920×1080 JPG. Sprites — 64×64 to 256×256 PNG with transparency. Portraits — 120×120 PNG. Keeping sprites consistent in size makes z-ordering and scaling predictable.</div>
+    </div>
+
+    <h3 id="audio">Audio Library</h3>
+    <p>Click the <strong>Audio</strong> toggle. The audio library works the same as images but with additional metadata.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Type</td><td><code>ambient</code> — looping background music/atmosphere. <code>sfx</code> — short one-shot sound effects.</td></tr>
+          <tr><td>Loop</td><td>Toggle on for ambient tracks. Off for SFX.</td></tr>
+          <tr><td>Preview</td><td>Click ▶ to play the audio in the editor without leaving the tab.</td></tr>
+          <tr><td>Volume</td><td>Set a default volume (0.0–1.0) that game.json uses unless overridden per-scene.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠</div>
+      <div><strong>Keep audio files small.</strong> Ambient tracks work best as short loops (20–60 seconds) that the engine loops seamlessly. Long uncompressed audio files significantly increase load time. Use 128kbps MP3 for ambient, 64kbps for SFX.</div>
+    </div>
+  </section>
+
+  <!-- ══ 06 GAME TAB ══ -->
+  <section class="section" id="tab-game">
+    <h2><span class="section-num">06</span>Game Tab</h2>
+    <p>The Game tab authors <code>game.json</code> — the top-level configuration file that tells the engine everything about your specific game. The engine reads this file first and uses it to configure all other systems.</p>
+
+    <h3 id="game-metadata">Metadata & Engine Settings</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Game ID</td><td>Unique identifier, lowercase, no spaces (e.g. <code>verdure</code>). Used as the localStorage namespace for save data.</td></tr>
+          <tr><td>Title</td><td>Display name shown on the game's loading screen.</td></tr>
+          <tr><td>Version</td><td>Your game version string (e.g. <code>1.0.0</code>).</td></tr>
+          <tr><td>Starting Scene</td><td>Picker — the scene the player sees when starting a new game.</td></tr>
+          <tr><td>Default View Type</td><td><code>topdown</code> or <code>sideview</code>. Individual scenes can override this.</td></tr>
+          <tr><td>Save Key</td><td>Auto-filled from Game ID. The key used to store save data in localStorage. Change only if you need multiple save slots.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Player Setup</h3>
+    <p>Defines the player's state at the start of a new game. All stat names you define here become available throughout the editor in effects and conditions.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Starting Stats</td><td>Add any number of named stats with initial values (e.g. <code>coins: 0</code>, <code>health: 100</code>, <code>energy: 10</code>). Stat names are free-form — define what your game needs.</td></tr>
+          <tr><td>Starting Inventory</td><td>Entity picker — select items the player begins with.</td></tr>
+          <tr><td>Starting Flags</td><td>Add boolean flags that are set from the start (unusual — most flags begin as <code>false</code> / unset).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="hud-builder">HUD Builder</h3>
+    <p>The HUD is entirely configured here — the engine has no hardcoded HUD elements. Add, remove, and reorder elements using the drag handles. A live preview strip at the right panel shows exactly how the HUD will render in the game.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Element Type</th><th>Description</th><th>Config Fields</th></tr></thead>
+        <tbody>
+          <tr><td><code>currency</code></td><td>Numeric value with icon. Ideal for coins, gems, points.</td><td>Stat name, icon (emoji or asset), label</td></tr>
+          <tr><td><code>stat_bar</code></td><td>Segmented or filled bar. Ideal for health, energy, mana.</td><td>Stat name, max value, bar colour, icon</td></tr>
+          <tr><td><code>counter</code></td><td>Simple number display. Good for XP, days elapsed, score.</td><td>Stat name, icon, label</td></tr>
+          <tr><td><code>inventory</code></td><td>Row of item slots showing collected items.</td><td>Number of visible slots</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Dialog Style</h3>
+    <p>Configure the visual appearance of the dialog box — background colour, text colour, border, font size, and whether NPC portraits appear on the left or right. These settings apply globally to all dialogs in the game.</p>
+
+    <h3>Transition Settings</h3>
+    <p>Choose the scene transition animation (<code>fade</code>, <code>slide_left</code>, <code>slide_up</code>, <code>none</code>) and its duration in milliseconds. Applied to all portal transitions unless overridden per-portal.</p>
+
+    <h3 id="ads-config">Ads Configuration</h3>
+    <div class="callout note">
+      <div class="callout-icon">ℹ</div>
+      <div>Ads only function when the game is served over HTTPS. They are automatically hidden when the player is offline. During local development, always keep <strong>Test Mode</strong> enabled to avoid invalid traffic flags on your AdMob account.</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Enabled</td><td>Master toggle. Disables all ad logic when off.</td></tr>
+          <tr><td>Provider</td><td>Currently <code>admob</code>. Additional providers can be added in future engine versions.</td></tr>
+          <tr><td>Test Mode</td><td>Always on during development. Shows test ads only.</td></tr>
+          <tr><td>Rewarded Unit ID</td><td>Your AdMob rewarded ad unit ID.</td></tr>
+          <tr><td>Interstitial Unit ID</td><td>Your AdMob interstitial ad unit ID.</td></tr>
+          <tr><td>Interstitial Frequency</td><td>Show an interstitial every N scene transitions (recommended: 3–5).</td></tr>
+          <tr><td>Rewarded Cooldown</td><td>Minimum seconds between rewarded ad opportunities (recommended: 30).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Audio Mapping</h3>
+    <p>Map ambient tracks to scenes and SFX to engine events. Ambient tracks are selected from the Audio Library. SFX events are fixed engine events (item_pickup, dialog_open, etc.) — assign an audio asset to each.</p>
+  </section>
+
+  <!-- ══ 07 ENTITIES TAB ══ -->
+  <section class="section" id="tab-entities">
+    <h2><span class="section-num">07</span>Entities Tab</h2>
+    <p>Entities are the interactive objects of your game world — plants, NPCs, tools, hazards, portals, mini-games, decorations, and hidden objects. The Entities tab builds <code>entities.json</code>, a library of reusable <strong>templates</strong>. Scenes then place <strong>instances</strong> of these templates at specific positions.</p>
+
+    <div class="callout info">
+      <div class="callout-icon">📋</div>
+      <div><strong>Templates vs Instances.</strong> An entity template defines everything an object can be and do — all its states, animations, and interactions. A scene instance says "put this template here, starting in this state." One template can be placed as many instances as needed across all scenes.</div>
+    </div>
+
+    <h3 id="entity-basics">Creating an Entity</h3>
+    <p>Click <strong>+ New Entity</strong> in the left panel. Fill in the basic fields:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>ID</td><td>Auto-generated from the name (lowercase, underscores). Can be edited. Must be unique across all entities.</td></tr>
+          <tr><td>Name</td><td>Display name shown in pickers and debug overlays.</td></tr>
+          <tr><td>Category</td><td>Determines the icon shown in lists and filters available in the scene canvas. See Section 17 for all categories.</td></tr>
+          <tr><td>Description</td><td>Flavour text. Used in the editor for clarity — not shown in-game unless referenced in a dialog.</td></tr>
+          <tr><td>Initial State</td><td>Dropdown of states you define below. The state the entity starts in when a fresh game begins.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="entity-states">States</h3>
+    <p>Every entity has one or more states. A state defines how the entity looks, what animations play, and what the player can do with it. Click <strong>+ Add State</strong> to create one.</p>
+
+    <h4>State Fields</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>State ID</td><td>Unique within this entity (e.g. <code>seed</code>, <code>sprouting</code>, <code>bloomed</code>).</td></tr>
+          <tr><td>Label</td><td>Human-readable name shown in debug overlays.</td></tr>
+          <tr><td>Sprite</td><td>Image picker — the sprite displayed in this state. Leave blank for invisible states.</td></tr>
+          <tr><td>Animation</td><td>Animation type and parameters. See Section 16.</td></tr>
+          <tr><td>Transform</td><td>Scale, anchor point (<code>bottom</code>, <code>center</code>, <code>top</code>), z-index, and flip-x.</td></tr>
+          <tr><td>On Enter Effects</td><td>Effects that fire the moment the entity enters this state. Use for spawning, timers, sounds, stat changes.</td></tr>
+          <tr><td>On Exit Effects</td><td>Effects that fire when leaving this state (less common — useful for cleanup).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Growth Animation (Plants)</h4>
+    <p>When animation type is set to <code>grow</code>, two additional fields appear:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Grow Axis</td><td><code>xy</code> for side-view scenes (grows upward and slightly wider). <code>xz</code> for top-down scenes (grows outward in all directions).</td></tr>
+          <tr><td>Duration</td><td>Seconds for the animation to complete. Should match the grow timer duration for perfect sync.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="entity-interactions">Interactions</h3>
+    <p>Interactions are what the player can do with an entity in a given state — click it, use a tool on it, combine items, or watch an ad for a reward. Each state can have multiple interactions; the engine evaluates conditions top-to-bottom and uses the first one whose conditions all pass.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>click</code></td><td>Simple click with no inventory requirement.</td></tr>
+          <tr><td><code>use_item</code></td><td>Player must have a specific item selected in inventory. The <em>Requires Item</em> field appears.</td></tr>
+          <tr><td><code>combine</code></td><td>Combine two inventory items together via the entity. Requires Item specifies the second item.</td></tr>
+          <tr><td><code>rewarded_ad</code></td><td>Shows a rewarded ad. Has separate <em>On Rewarded</em> and <em>On Skipped</em> effect lists.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Conditions</h4>
+    <p>Each interaction can have zero or more conditions. All conditions must pass for the interaction to be available. See Section 15 for the full conditions reference.</p>
+
+    <h4>Effects</h4>
+    <p>Effects are what happens when an interaction fires. Add multiple effects — they execute in order. See Section 14 for the full effects reference.</p>
+
+    <h3 id="entity-timers">Timers</h3>
+    <p>A state can have an optional real-time timer that fires when the countdown completes. Timers survive the browser being closed — the engine calculates elapsed time on load and fires immediately if a timer has already completed.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Timer ID</td><td>Unique identifier (e.g. <code>wildflower_grow</code>). Used by <code>modify_timer</code> effects to speed up or slow down.</td></tr>
+          <tr><td>Duration</td><td>Seconds until the timer fires.</td></tr>
+          <tr><td>On Complete Effects</td><td>Effects that fire when the timer finishes. Typically a <code>set_state</code> to advance the entity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">⏱</div>
+      <div><strong>Timer tip.</strong> The timer starts when the entity <em>enters</em> the state (via <code>on_enter</code> effects using <code>start_timer</code>). If you want a timer that starts immediately when the entity is first placed, set it in the <code>on_enter</code> of the initial state.</div>
+    </div>
+  </section>
+
+  <!-- ══ 08 SCENES TAB ══ -->
+  <section class="section" id="tab-scenes">
+    <h2><span class="section-num">08</span>Scenes Tab</h2>
+    <p>Scenes are the maps and rooms of your game. Each scene has a background image, a set of placed entity instances, masks, hotspots, and entry/exit triggers. The Scenes tab provides a visual canvas editor built on Konva.js.</p>
+
+    <h3>Creating a Scene</h3>
+    <p>Click <strong>+ New Scene</strong> in the left panel. Set the scene name, description, view type (<code>topdown</code> or <code>sideview</code>), and upload a background image via the background picker. The canvas becomes active immediately.</p>
+
+    <h3 id="canvas-tools">Canvas Toolbar</h3>
+    <div class="tool-row">
+      <span class="tool-chip">↖ Select</span>
+      <span class="tool-chip">＋ Place</span>
+      <span class="tool-chip">⬡ Mask</span>
+      <span class="tool-chip">⬟ Hotspot</span>
+      <span class="tool-chip">🖼 Background</span>
+      <span class="tool-chip">👁 Masks</span>
+      <span class="tool-chip">👁 Hotspots</span>
+      <span class="tool-chip">🔍 Preview</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>How to use</th></tr></thead>
+        <tbody>
+          <tr><td>↖ Select</td><td>Click any placed instance, mask, or hotspot to select it. Drag to reposition. <kbd>Delete</kbd> removes the selected item. Click empty canvas to deselect.</td></tr>
+          <tr><td>＋ Place</td><td>Click anywhere on the canvas to open the entity picker. Choose an entity — an instance is placed at the click position. Switch back to Select to reposition.</td></tr>
+          <tr><td>⬡ Mask</td><td>Click to place polygon points. <kbd>Double-click</kbd> to close the polygon. <kbd>Esc</kbd> to cancel. The right panel sets mask type after closing.</td></tr>
+          <tr><td>⬟ Hotspot</td><td>Drag to draw a rectangular hotspot region. The right panel lets you configure interactions on the hotspot — identical to entity interactions.</td></tr>
+          <tr><td>🖼 Background</td><td>Opens the image picker filtered to the <code>background</code> tag. The selected image fills the canvas at 16:9.</td></tr>
+          <tr><td>👁 Masks / Hotspots</td><td>Toggle visibility of mask overlays and hotspot outlines on the canvas. Useful when positioning instances near masked areas.</td></tr>
+          <tr><td>🔍 Preview</td><td>Launches the live scene preview in a panel overlay. Shows the scene exactly as the game engine renders it, with animations running.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="placing-instances">Placing Instances</h3>
+    <p>Positions are stored as percentages (0–100) of the canvas width and height. This makes scenes resolution-independent — they render correctly on any screen size.</p>
+
+    <p>With an instance selected, the right panel shows:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Entity</td><td>Read-only. The template this instance was created from.</td></tr>
+          <tr><td>Position X / Y</td><td>Percentage coordinates. Also updated by dragging on the canvas.</td></tr>
+          <tr><td>Z-Index Override</td><td>Override the template's default z-index for this instance. Useful when two instances would otherwise overlap incorrectly.</td></tr>
+          <tr><td>Scale Override</td><td>Scale multiplier for this instance only. Leave blank to use the template's state scale.</td></tr>
+          <tr><td>Flip X</td><td>Mirror the sprite horizontally. Useful for placing two instances of the same NPC facing different directions.</td></tr>
+          <tr><td>Initial State</td><td>The state this instance starts in. Defaults to the template's <code>initial_state</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="masks-hotspots">Masks</h3>
+    <p>Masks are polygon regions that restrict interaction or planting. They are visible in the editor as coloured overlays and invisible in-game.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mask Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>no_interact</code></td><td>Clicks inside this region are ignored entirely. Use for walls, sky, water.</td></tr>
+          <tr><td><code>no_plant</code></td><td>Entities with plant category cannot be placed here. Use for paths, concrete, indoors.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Hotspots</h3>
+    <p>Hotspots are clickable areas defined directly on the background image — no entity sprite needed. Use them for background details: a painted sign, a window, a patch of ground, a bookshelf. They support the full interaction and effects system.</p>
+
+    <h3>Entry Points</h3>
+    <p>Entry points tell the engine where to focus when arriving in a scene from a specific portal. A <code>default</code> entry point is always required. Add named entry points (e.g. <code>from_shed</code>, <code>from_garden</code>) for portals that arrive from different directions.</p>
+
+    <h3>Scene On-Enter / On-Exit</h3>
+    <p>Effects that fire when the player enters or leaves the scene. Typically used for first-visit dialogs, ambient sound changes, and flag checks. Multiple trigger blocks can be defined — each block has its own conditions, so different things can happen on the first visit versus subsequent visits.</p>
+
+    <h3 id="scene-preview">Scene Preview</h3>
+    <p>Click the <strong>🔍 Preview</strong> button to open a live preview overlay. This runs the actual game renderer (<code>shared/renderer.js</code>) against the current scene data, showing sprites at their correct positions with animations playing. What you see in the preview is pixel-perfect to what appears in the game.</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">🎨</div>
+      <div><strong>Background image tips.</strong> Design backgrounds at 1920×1080 (16:9). Leave intentional blank areas where entities will be placed — sprites sitting on detailed busy backgrounds are hard to read. Slightly desaturated backgrounds make sprites pop. Suggested AI image prompt style: <em>"top-down view of [location], [art style], muted earthy palette, hand-drawn illustration"</em>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 09 DIALOGS TAB ══ -->
+  <section class="section" id="tab-dialogs">
+    <h2><span class="section-num">09</span>Dialogs Tab</h2>
+    <p>The Dialogs tab builds conversation trees using a visual <strong>node graph</strong> editor powered by Drawflow. Each dialog is a self-contained JSON file in <code>data/dialogs/</code>. Dialogs can be triggered by entity interactions, hotspots, scene entry events, or other dialogs.</p>
+
+    <h3>The Node Graph</h3>
+    <p>Each node appears as a card on a zoomable canvas. Connections between nodes are drawn as arrows from the <em>next</em> handle. Click <strong>+ Add Node</strong> to create a node, then drag it to position it. Click <strong>Auto Layout</strong> to arrange all nodes top-to-bottom automatically.</p>
+
+    <h3 id="node-types">Node Types</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Icon</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>say</code></td><td>💬</td><td>Displays a line of dialog with speaker name and optional portrait. Player clicks to advance. The most common node type.</td></tr>
+          <tr><td><code>choice</code></td><td>🔀</td><td>Shows 2–4 buttons for the player to choose from. Each choice has its own conditions, effects, and <em>next</em> pointer. The node has one connection handle per choice.</td></tr>
+          <tr><td><code>auto</code></td><td>⚡</td><td>Invisible node — no dialog box shown. Runs effects immediately and jumps to the next node. Use to give items, set flags, or play sounds at precise points in a conversation without interrupting the writing.</td></tr>
+          <tr><td><code>end</code></td><td>⏹</td><td>Closes the dialog box. Can have final effects (e.g. set a flag that the conversation is complete). Every dialog tree must have at least one end node.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Say Node Fields</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Speaker</td><td>Name displayed above the dialog text. Use <code>narrator</code> for voiceover-style text with no portrait.</td></tr>
+          <tr><td>Portrait</td><td>Image picker filtered to the <code>portrait</code> tag. Optional — narrator nodes have no portrait.</td></tr>
+          <tr><td>Portrait Side</td><td><code>left</code> or <code>right</code>. Swap sides for visual variety in two-character conversations.</td></tr>
+          <tr><td>Text</td><td>The dialog line. Supports variable substitution: <code>{player_name}</code>, <code>{stat_coins}</code>, <code>{stat_health}</code>.</td></tr>
+          <tr><td>Style</td><td>Visual treatment. <code>default</code> — standard dialog box. <code>item_received</code> — golden highlight with item icon. <code>inner_monologue</code> — italic, no border.</td></tr>
+          <tr><td>Effects</td><td>Optional effects that fire when this node is <em>displayed</em> (before the player clicks). Useful for playing a sound or setting a flag on a specific line.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="branching">Branching & Choices</h3>
+    <p>Choice nodes branch the conversation. Each choice can have conditions — a choice only appears if all its conditions pass. This allows dialog options to change based on what the player has done.</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">🌿</div>
+      <div><strong>Loop back, don't duplicate.</strong> If a player asks a side question and you want them to return to the main choice, connect the side branch's end back to the choice node — not to a copy of it. The node graph makes loops like this easy to visualise and avoids duplicate content.</div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">📝</div>
+      <div><strong>Organizing large dialog trees.</strong> Use the <em>Auto Layout</em> button regularly to keep the graph readable. For very long conversations, consider splitting into multiple dialog files linked by <code>show_dialog</code> effects at end nodes.</div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ══ 10 SAVE & EXPORT ══ -->
+  <section class="section" id="save-export">
+    <h2><span class="section-num">10</span>Save & Export</h2>
+
+    <h3>Saving During Development</h3>
+    <p>Press <kbd>Ctrl+S</kbd> or click <strong>Save</strong> in the header. All modified JSON files are written directly to your project folder. Live Server detects the changes and reloads <code>game/index.html</code> automatically — your game is updated in seconds.</p>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div>Keep the game running in a second browser tab alongside the editor. After each <kbd>Ctrl+S</kbd> in the editor tab, the game tab reloads automatically. This gives you an instant play-test loop.</div>
+    </div>
+
+    <h3>Export Zip (Deployment)</h3>
+    <p>Click <strong>Export Zip</strong> in the header to download a complete, deployable archive of your project. The zip contains:</p>
+    <ul>
+      <li>All JSON data files (<code>game.json</code>, <code>entities.json</code>, all scenes, all dialogs)</li>
+      <li>All asset files (<code>assets/sprites/</code>, <code>assets/backgrounds/</code>, <code>assets/audio/</code>)</li>
+      <li>The game engine (<code>game/</code>)</li>
+      <li>The shared renderer (<code>shared/</code>)</li>
+      <li>Mini-games (<code>minigames/</code>)</li>
+      <li>PWA files (<code>manifest.json</code>, <code>sw.js</code>)</li>
+    </ul>
+    <p>The editor itself is <em>not</em> included in the export — it is a development tool and is not deployed.</p>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠</div>
+      <div>Always export a backup zip at the end of every significant session. Commit the zip (or the raw project folder) to GitHub after each milestone. The editor's localStorage autosave is a safety net, not a version history.</div>
+    </div>
+  </section>
+
+  <!-- ══ 11 HOSTING & PWA ══ -->
+  <section class="section" id="hosting">
+    <h2><span class="section-num">11</span>Hosting & PWA Setup</h2>
+
+    <h3>Deploying to the Web</h3>
+    <p>Extract the exported zip and upload its contents to any static web host. The game requires HTTPS for the service worker and ads to function. Recommended free hosts:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Host</th><th>Setup</th><th>HTTPS</th></tr></thead>
+        <tbody>
+          <tr><td>GitHub Pages</td><td>Push to a repo, enable Pages in repo settings</td><td>✓ Automatic</td></tr>
+          <tr><td>Netlify</td><td>Drag the folder onto netlify.com/drop</td><td>✓ Automatic</td></tr>
+          <tr><td>Vercel</td><td>Connect GitHub repo or CLI deploy</td><td>✓ Automatic</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Progressive Web App (PWA)</h3>
+    <p>The exported game includes <code>manifest.json</code> and <code>sw.js</code> which make it a fully installable Progressive Web App. After the first online load, the service worker caches all game files and the game plays entirely offline.</p>
+
+    <h4>What Players Can Do</h4>
+    <ul>
+      <li><strong>Mobile (iOS/Android):</strong> "Add to Home Screen" — the game installs like a native app with a full-screen experience, no browser chrome.</li>
+      <li><strong>Desktop (Chrome/Edge):</strong> An install button appears in the address bar — click to install as a standalone desktop app.</li>
+      <li><strong>Offline play:</strong> After the first load, the game works with no internet connection on any platform.</li>
+    </ul>
+
+    <div class="callout note">
+      <div class="callout-icon">ℹ</div>
+      <div><strong>Updating a published game.</strong> When you deploy a new version, increment the cache version in <code>sw.js</code> (e.g. <code>verdure-v1</code> → <code>verdure-v2</code>). Players who reload the game online will receive the update automatically; their offline cache is replaced.</div>
+    </div>
+  </section>
+
+  <!-- ══ 12 ADS IN PRODUCTION ══ -->
+  <section class="section" id="ads-deploy">
+    <h2><span class="section-num">12</span>Ads in Production</h2>
+    <p>Ads require HTTPS and an active internet connection. The engine handles both gracefully.</p>
+    <ul>
+      <li><strong>Online:</strong> Rewarded and interstitial ads function normally via your AdMob unit IDs.</li>
+      <li><strong>Offline:</strong> The Ad Manager detects <code>navigator.onLine === false</code>. Rewarded ad interactions are hidden from the UI. Interstitial triggers are skipped silently. No errors, no broken buttons.</li>
+      <li><strong>Returning online:</strong> Ad UI elements reappear automatically when connectivity is restored.</li>
+    </ul>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠</div>
+      <div><strong>Disable Test Mode before publishing.</strong> In the Game tab → Ads Config, turn off Test Mode before your final export. Leaving test mode on in production means zero ad revenue. Double-check this before every release build.</div>
+    </div>
+  </section>
+
+  <!-- ══ 13 WORKFLOW ══ -->
+  <section class="section" id="workflow">
+    <h2><span class="section-num">13</span>Recommended Workflow</h2>
+    <ol class="steps">
+      <li>
+        <div><strong>Set up the Assets tab first.</strong> Upload all sprites, backgrounds, and audio before touching any other tab. Everything else depends on assets being available in the picker.</div>
+      </li>
+      <li>
+        <div><strong>Configure the Game tab.</strong> Set your game title, define your player stats, build the HUD. This establishes the stat names that effects and conditions can reference everywhere else.</div>
+      </li>
+      <li>
+        <div><strong>Build the Entity library.</strong> Create all entity templates — plants, tools, NPCs, hazards, portals, mini-games. You cannot place what doesn't exist. Start with simple entities (decorations, tools) before tackling complex state machines (growing plants, NPCs with dialog).</div>
+      </li>
+      <li>
+        <div><strong>Write dialog trees.</strong> Create dialog files for your NPCs. Having dialogs done before placing NPCs means you can immediately hook them up in the Entities tab interactions.</div>
+      </li>
+      <li>
+        <div><strong>Build scenes in logical order.</strong> Start with the entry/starting scene. Create connected rooms in the order a new player would encounter them. Upload backgrounds before placing objects — positioning is much easier with the scene visible.</div>
+      </li>
+      <li>
+        <div><strong>Draw masks after backgrounds.</strong> Trace non-interactive areas (walls, sky, water, paths) with the ⬡ Mask tool once the background is in place.</div>
+      </li>
+      <li>
+        <div><strong>Place instances and hotspots.</strong> Use the ＋ Place tool to populate the scene. Position with Select. Add hotspots for background details. Keep z-ordering in mind: background decorations low, ground objects mid, foreground objects high.</div>
+      </li>
+      <li>
+        <div><strong>Link scenes with portals.</strong> Place portal entity instances and configure their <code>transition_scene</code> effects. Test every portal in both directions.</div>
+      </li>
+      <li>
+        <div><strong>Save and play-test frequently.</strong> <kbd>Ctrl+S</kbd> → switch to the game tab in the browser → reload. Walk through every interaction, trigger every dialog, test every portal. Fix issues before they compound.</div>
+      </li>
+      <li>
+        <div><strong>Export zip at the end of every session.</strong> Deploy to your web host. Commit to GitHub. Share with testers.</div>
+      </li>
+    </ol>
+
+    <div class="callout tip">
+      <div class="callout-icon">🌱</div>
+      <div><strong>Start small.</strong> Two connected scenes, 6–8 entities, one NPC with a dialog tree, one working interaction loop. A focused small world is more playable than an incomplete large one. Expand once the core loop is satisfying.</div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ══ 14 EFFECTS REFERENCE ══ -->
+  <section class="section" id="ref-effects">
+    <h2><span class="section-num">14</span>Effects Reference</h2>
+    <p>Effects are actions the engine executes in response to interactions, state changes, dialog nodes, timers, or scene entry/exit triggers. Multiple effects execute in the order they are listed.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Action</th><th>Description</th><th>Key Fields</th></tr></thead>
+        <tbody>
+          <tr><td><code>set_state</code></td><td>Change this entity's state to a new state.</td><td><code>state</code> — target state ID</td></tr>
+          <tr><td><code>set_entity_state</code></td><td>Change another entity instance's state.</td><td><code>target_instance</code>, <code>state</code></td></tr>
+          <tr><td><code>spawn_entity</code></td><td>Add a new entity instance to the current scene.</td><td><code>entity</code> (template ID), <code>position</code>, <code>offset_x</code>, <code>offset_y</code></td></tr>
+          <tr><td><code>remove_entity</code></td><td>Remove an entity instance from the current scene.</td><td><code>instance_id</code></td></tr>
+          <tr><td><code>give_item</code></td><td>Add an item to the player's inventory.</td><td><code>item</code> (entity ID)</td></tr>
+          <tr><td><code>remove_item</code></td><td>Remove an item from the player's inventory.</td><td><code>item</code> (entity ID)</td></tr>
+          <tr><td><code>modify_stat</code></td><td>Add or subtract from a player stat. Negative <code>amount</code> subtracts.</td><td><code>stat</code>, <code>amount</code></td></tr>
+          <tr><td><code>set_flag</code></td><td>Set a named boolean flag to true.</td><td><code>flag</code></td></tr>
+          <tr><td><code>clear_flag</code></td><td>Set a named boolean flag to false.</td><td><code>flag</code></td></tr>
+          <tr><td><code>start_timer</code></td><td>Begin a real-time countdown. Survives page close.</td><td><code>timer_id</code>, <code>duration_seconds</code>, <code>on_complete</code> (effects array)</td></tr>
+          <tr><td><code>stop_timer</code></td><td>Cancel a running timer without firing its on_complete.</td><td><code>timer_id</code></td></tr>
+          <tr><td><code>modify_timer</code></td><td>Speed up or slow down a running timer.</td><td><code>timer_id</code>, <code>reduce_by_seconds</code> (negative to extend)</td></tr>
+          <tr><td><code>show_dialog</code></td><td>Open a dialog tree.</td><td><code>dialog</code> (dialog file ID)</td></tr>
+          <tr><td><code>transition_scene</code></td><td>Navigate to another scene.</td><td><code>target_scene</code>, <code>transition</code>, <code>entry_point</code>, <code>show_interstitial_if_due</code></td></tr>
+          <tr><td><code>unlock_portal</code></td><td>Enable a portal instance (shorthand for set_entity_state to unlocked).</td><td><code>instance_id</code></td></tr>
+          <tr><td><code>lock_portal</code></td><td>Disable a portal instance.</td><td><code>instance_id</code></td></tr>
+          <tr><td><code>play_sfx</code></td><td>Play a sound effect once.</td><td><code>audio</code> (audio library ID)</td></tr>
+          <tr><td><code>launch_minigame</code></td><td>Open a mini-game in an iframe overlay.</td><td><code>src</code>, <code>data_in</code> (object), <code>on_success</code> (effects), <code>on_fail</code> (effects)</td></tr>
+          <tr><td><code>show_rewarded_ad</code></td><td>Show a rewarded ad. Silently skipped if offline.</td><td><code>on_rewarded</code> (effects), <code>on_skipped</code> (effects)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ 15 CONDITIONS REFERENCE ══ -->
+  <section class="section" id="ref-conditions">
+    <h2><span class="section-num">15</span>Conditions Reference</h2>
+    <p>Conditions gate interactions and dialog choices. All conditions in a list must pass for the interaction or choice to be available. An empty conditions list means always available.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Passes when…</th><th>Fields</th></tr></thead>
+        <tbody>
+          <tr><td><code>flag_set</code></td><td>The named flag is true.</td><td><code>flag</code></td></tr>
+          <tr><td><code>flag_not_set</code></td><td>The named flag is false or unset.</td><td><code>flag</code></td></tr>
+          <tr><td><code>has_item</code></td><td>The player has the item in inventory.</td><td><code>item</code> (entity ID)</td></tr>
+          <tr><td><code>not_has_item</code></td><td>The player does not have the item.</td><td><code>item</code> (entity ID)</td></tr>
+          <tr><td><code>entity_state</code></td><td>A specific entity instance is in the given state.</td><td><code>instance_id</code>, <code>state</code></td></tr>
+          <tr><td><code>stat_gte</code></td><td>A player stat is greater than or equal to a value.</td><td><code>stat</code>, <code>value</code></td></tr>
+          <tr><td><code>stat_lte</code></td><td>A player stat is less than or equal to a value.</td><td><code>stat</code>, <code>value</code></td></tr>
+          <tr><td><code>stat_eq</code></td><td>A player stat equals exactly a value.</td><td><code>stat</code>, <code>value</code></td></tr>
+          <tr><td><code>online</code></td><td>The player has an active internet connection.</td><td>—</td></tr>
+          <tr><td><code>offline</code></td><td>The player has no internet connection.</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ 16 ANIMATIONS REFERENCE ══ -->
+  <section class="section" id="ref-animations">
+    <h2><span class="section-num">16</span>Animations Reference</h2>
+    <p>Animations are CSS/canvas effects applied to entity sprites in a given state. All animations loop continuously unless otherwise noted.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Description</th><th>Config Fields</th></tr></thead>
+        <tbody>
+          <tr><td><code>idle</code></td><td>No animation. Static sprite.</td><td>—</td></tr>
+          <tr><td><code>glow</code></td><td>Soft pulsing outer glow.</td><td><code>color</code> (hex), <code>speed</code> (slow / medium / fast)</td></tr>
+          <tr><td><code>float</code></td><td>Gentle up-and-down bobbing.</td><td><code>amplitude</code> (px), <code>speed</code></td></tr>
+          <tr><td><code>pulse</code></td><td>Subtle scale breathe in/out.</td><td><code>scale_range</code> ([min, max]), <code>speed</code></td></tr>
+          <tr><td><code>grow</code></td><td>Scale increase over time, synced to a timer.</td><td><code>axis</code> (xy / xz), <code>start_scale</code>, <code>end_scale</code>, <code>duration_seconds</code></td></tr>
+          <tr><td><code>shake</code></td><td>Rapid horizontal tremor. Useful for hazards.</td><td><code>intensity</code> (px), <code>speed</code></td></tr>
+          <tr><td><code>spin</code></td><td>Continuous rotation.</td><td><code>speed</code>, <code>direction</code> (cw / ccw)</td></tr>
+          <tr><td><code>sparkle</code></td><td>Particle sparkles around the sprite. One-shot or looping.</td><td><code>color</code>, <code>duration_seconds</code> (omit for loop)</td></tr>
+          <tr><td><code>flicker</code></td><td>Irregular opacity flicker. Good for candles, broken lights.</td><td><code>min_opacity</code>, <code>speed</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ 17 ENTITY CATEGORIES ══ -->
+  <section class="section" id="ref-categories">
+    <h2><span class="section-num">17</span>Entity Categories</h2>
+    <p>Category affects the icon shown in the editor's entity list and the canvas overlay colour. It has no effect on engine behaviour — it is purely organisational.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Category</th><th>Icon</th><th>Typical Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>plant</code></td><td>🌱</td><td>Growable vegetation. Use grow animations and timers.</td></tr>
+          <tr><td><code>tool</code></td><td>🔧</td><td>Inventory items used in <code>use_item</code> interactions.</td></tr>
+          <tr><td><code>npc</code></td><td>🧑</td><td>Characters with dialog trees.</td></tr>
+          <tr><td><code>creature</code></td><td>🦋</td><td>Animals or creatures, often spawned by effects.</td></tr>
+          <tr><td><code>hazard</code></td><td>⚠</td><td>Obstacles requiring clearing before use.</td></tr>
+          <tr><td><code>portal</code></td><td>🚪</td><td>Scene transition points. Use <code>transition_scene</code> effect.</td></tr>
+          <tr><td><code>hidden_object</code></td><td>🔍</td><td>Invisible until a <code>reveals_hidden</code> effect is triggered.</td></tr>
+          <tr><td><code>minigame</code></td><td>🎮</td><td>Objects that launch a mini-game HTML file.</td></tr>
+          <tr><td><code>decoration</code></td><td>🪨</td><td>Visual-only. No interactions. Adds atmosphere.</td></tr>
+          <tr><td><code>collectible</code></td><td>⭐</td><td>One-time pickup items that give inventory or stats.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ 18 HUD ELEMENT TYPES ══ -->
+  <section class="section" id="ref-hud">
+    <h2><span class="section-num">18</span>HUD Element Types</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Renders as</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td><code>currency</code></td><td>Icon + number. Taps/clicks to open a spend dialog if configured.</td><td>Coins, gems, points, tokens</td></tr>
+          <tr><td><code>stat_bar</code></td><td>Row of filled segments or a continuous filled bar.</td><td>Health, energy, mana, stamina</td></tr>
+          <tr><td><code>counter</code></td><td>Icon + number. No interaction.</td><td>XP, days, moves, score</td></tr>
+          <tr><td><code>inventory</code></td><td>Row of item slot boxes. Active item highlighted. Click to select.</td><td>Carried items — one per game</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>All HUD elements reference stat names defined in the Game tab's Player Setup. If a stat is removed from Player Setup, all HUD elements referencing it show <code>—</code> in the editor until reassigned.</p>
+  </section>
+
+  <!-- ══ 19 DIALOG NODE TYPES ══ -->
+  <section class="section" id="ref-nodes">
+    <h2><span class="section-num">19</span>Dialog Node Types Reference</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Visible to player</th><th>Has choices</th><th>Has effects</th><th>Terminal</th></tr></thead>
+        <tbody>
+          <tr><td><code>say</code></td><td>✓ Dialog box + portrait</td><td>—</td><td>On display</td><td>—</td></tr>
+          <tr><td><code>choice</code></td><td>✓ Choice buttons only</td><td>✓ 2–4</td><td>Per choice</td><td>—</td></tr>
+          <tr><td><code>auto</code></td><td>—</td><td>—</td><td>✓ Immediate</td><td>—</td></tr>
+          <tr><td><code>end</code></td><td>— (dialog closes)</td><td>—</td><td>✓ On close</td><td>✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">🌿</div>
+      <div><strong>Use <code>auto</code> nodes freely.</strong> Separating side-effects (giving items, setting flags, playing sounds) into <code>auto</code> nodes keeps your <code>say</code> nodes clean and the dialog writing readable. A <code>say</code> node whose only job is to speak a line is much easier to edit than one that also triggers three effects.</div>
+    </div>
+  </section>
+
+  <hr>
+  <div class="footer">Verdure World Editor · Help v1.0 · 🌿</div>
+
+</main>
+</body>
+</html>
