@@ -390,6 +390,17 @@
     border: none;
     line-height: 1.8;
 }
+
+    .layout-diagram pre {
+    white-space: pre;
+    font-family: var(--font-mono);
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    line-height: 1.7;
+    overflow-x: auto;
+}
   </style>
 </head>
 <body>
@@ -593,7 +604,8 @@
     <h2><span class="section-num">04</span>Interface Layout</h2>
     <p>The editor has a persistent three-panel layout. All tabs share the same structure — only the contents change.</p>
 
-    <div class="layout-diagram">
+   <div class="layout-diagram">
+<pre>
 <span class="ld-header">┌──────────────────────────────────────────────────────────────┐</span>
 <span class="ld-header">│  HEADER  Logo · Assets · Game · Entities · Scenes · Dialogs  │</span>
 <span class="ld-header">│          ·· Open Folder · Save · Export Zip ··               │</span>
@@ -605,7 +617,8 @@
 <span class="ld-label">│  + New button  │     node graph)          │                   │</span>
 <span class="ld-panel">│                │                          │                   │</span>
 <span class="ld-header">└────────────────┴──────────────────────────┴───────────────────┘</span>
-    </div>
+</pre>
+</div>
 
     <div class="table-wrap">
       <table>
