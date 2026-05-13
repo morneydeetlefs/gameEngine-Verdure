@@ -401,6 +401,111 @@
     line-height: 1.7;
     overflow-x: auto;
 }
+
+    .layout-diagram {
+    margin: 25px 0;
+}
+
+.editor-layout {
+    border: 2px solid #2e4a2e;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1a2a1a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    font-family: var(--font-body);
+}
+
+.layout-header {
+    background: #243824;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #3a5f3a;
+    flex-wrap: wrap;
+}
+
+.layout-logo {
+    font-weight: bold;
+    color: #8fbc8f;
+}
+
+.layout-tabs {
+    flex: 1;
+    color: #a8c8a8;
+    font-size: 0.95rem;
+}
+
+.layout-actions {
+    color: #b5d4b5;
+    font-size: 0.9rem;
+}
+
+.layout-body {
+    display: flex;
+    min-height: 380px;
+}
+
+.layout-left,
+.layout-right {
+    width: 220px;
+    background: #1f2f1f;
+    border-right: 1px solid #2e4a2e;
+    padding: 12px;
+}
+
+.layout-right {
+    border-right: none;
+    border-left: 1px solid #2e4a2e;
+}
+
+.layout-center {
+    flex: 1;
+    padding: 12px;
+    background: #162616;
+}
+
+.panel-title {
+    font-weight: 600;
+    color: #8fbc8f;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #2e4a2e;
+}
+
+.center-placeholder {
+    height: 100%;
+    border: 2px dashed #3a5f3a;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5a7a5a;
+    text-align: center;
+    font-style: italic;
+}
+
+.small-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: #3a5f3a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .layout-body {
+        flex-direction: column;
+    }
+    .layout-left, .layout-right {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #2e4a2e;
+    }
+}
   </style>
 </head>
 <body>
@@ -604,21 +709,60 @@
     <h2><span class="section-num">04</span>Interface Layout</h2>
     <p>The editor has a persistent three-panel layout. All tabs share the same structure — only the contents change.</p>
 
-   <div class="layout-diagram">
-<pre>
-<span class="ld-header">┌──────────────────────────────────────────────────────────────┐</span>
-<span class="ld-header">│  HEADER  Logo · Assets · Game · Entities · Scenes · Dialogs  │</span>
-<span class="ld-header">│          ·· Open Folder · Save · Export Zip ··               │</span>
-<span class="ld-header">├────────────────┬──────────────────────────┬───────────────────┤</span>
-<span class="ld-panel">│  LEFT PANEL    │                          │  RIGHT PANEL      │</span>
-<span class="ld-panel">│                │    CENTRE                │                   │</span>
-<span class="ld-label">│  List of items │    Main editing area     │  Properties for   │</span>
-<span class="ld-label">│  + Search      │    (canvas / form /      │  selected item    │</span>
-<span class="ld-label">│  + New button  │     node graph)          │                   │</span>
-<span class="ld-panel">│                │                          │                   │</span>
-<span class="ld-header">└────────────────┴──────────────────────────┴───────────────────┘</span>
-</pre>
-</div>
+<div class="layout-diagram">
+    <div class="editor-layout">
+        
+        <!-- Header -->
+        <div class="layout-header">
+            <div class="layout-logo">Verdure Editor</div>
+            <div class="layout-tabs">
+                Assets Game Entities Scenes Dialogs
+            </div>
+            <div class="layout-actions">
+                Open Folder Save Export Game
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="layout-body">
+            
+            <!-- Left Panel -->
+            <div class="layout-left">
+                <div class="panel-title">Browser</div>
+                <div class="panel-content">
+                    <p><strong>List of items</strong><br>
+                     • Scenes<br>
+                     • Entities<br>
+                     • Assets<br>
+                     • Dialogs</p>
+                    <button class="small-btn">+ New</button>
+                </div>
+            </div>
+
+            <!-- Center Area -->
+            <div class="layout-center">
+                <div class="panel-title">Main Editing Area</div>
+                <div class="center-placeholder">
+                    Canvas / Form / Scene View / Node Graph
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="layout-right">
+                <div class="panel-title">Properties</div>
+                <div class="panel-content">
+                    <p>Settings for selected item</p>
+                    <ul>
+                        <li>Name, Position, Size</li>
+                        <li>Appearance &amp; Animation</li>
+                        <li>Interactions &amp; Conditions</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>>
 
     <div class="table-wrap">
       <table>
